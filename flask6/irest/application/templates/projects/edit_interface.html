@@ -1,0 +1,159 @@
+{% extends '/layout.html' %}
+
+{% block title %}皮蛋 - 编辑接口{% endblock %}
+
+{% block body %}
+<h1 id="interface_name"></h1>
+<div>地址:<span id="interface_url"></span></div>
+<div>类型:<span id="method_type"></span></div>
+<div id="info"></div>
+
+<div><input id="save_request_button" type="button" value="保存">
+    <a href="{{ url_for('projects.export_word',project_id=interface.project.id) }}">导出文档</a>
+</div>
+<div style="height: 10px;"></div>
+
+<h2>请求参数</h2>
+<div style="height: 5px;"></div>
+<table border="1" id="request_param_table">
+    <tr>
+        <th><span id="add_request_param">+</span></th><th>名称</th><th>必选</th><th>类型</th><th>生成规则
+</th><th>初始值</th><th>简介</th>
+    </tr>
+</table>
+
+<h2>响应参数</h2>
+<div style="height: 5px;"></div>
+<table border="1" id="response_param_table">
+    <tr>
+        <th><span id="add_response_param">+</span></th><th>名称</th><th>必选</th><th>类型</th><th>生成规则
+</th><th>初始值</th><th>简介</th>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    function delete_row(obj) {
+        let obj1 = $(obj);
+        let row = obj1.parent();
+        row.remove();
+    }
+
+    // 获取页面上的请求或者响应数据
+    function get_data(row_type) {
+        let rows = $('.' + row_type);
+
+        // 获取请求参数列表
+        let result = [];
+        for (let i=0; i<rows.length; i++) {
+            let row_data = {};
+            let row = $(rows[i])
+            let name = $(row.children()[1]).children()[0].value
+            let data_type = $(row.children()[3]).children()[0].value
+            let info = $(row.children()[6]).children()[0].value
+            row_data['name'] = name
+            row_data['data_type'] = data_type
+            row_data['info'] = info
+            result.push(row_data)
+        }
+        return result;
+    }
+
+    function show_table(data, body_name, row_type, table) {
+        let request_body = data['data'][body_name];
+        // eval 将字符串变成js
+        if (request_body) {
+            request_body_data = eval(request_body);
+            make_rows(request_body_data, row_type, table);
+        }
+    }
+
+    // 添加行事件的回调函数
+    function add_row(e, table, row_type) {
+        let row = '<tr class="' + row_type + '"><td onclick="delete_row(this);">X</td><td><input \type="text" value=""></td><td><input\ type="checkbox"></td>\
+        <td>\
+        <select>\
+            <option value="string">String</option>\
+            <option value="number">Number</option>\
+            <option value="boolean">Boolean</option>\
+            <option value="array">Array</option>\
+        </select>    \
+        </td>\
+        <td><input type="text" value=""></td>\
+        <td><input type="text" value=""></td>\
+        <td><textarea></textarea></td>\
+    </tr>';
+        // $('#request_param_table').append($(row));
+        table.append($(row));
+    }
+
+    function make_rows(request_body_data, row_type, table) {
+        for (let i=0; i<request_body_data.length; i++) {
+            let row = request_body_data[i];
+            let name = row['name'];
+            let data_type = row['data_type'];
+            let info = row['info'];
+
+            let row_data = '<tr class="' + row_type + '"><td onclick="delete_row(this);">X</td><td><input \type="text" value="' + name + '"></td><td><input\ type="checkbox"></td>\
+        <td>\
+        <select>\
+            <option value="string">String</option>\
+            <option value="number">Number</option>\
+            <option value="boolean">Boolean</option>\
+            <option value="array">Array</option>\
+        </select>    \
+        </td>\
+        <td><input type="text" value=""></td>\
+        <td><input type="text" value=""></td>\
+        <td><textarea>' + info + '</textarea></td>\
+    </tr>';
+            table.append($(row_data));
+        }
+    }
+
+    $(document).ready(function() {
+        let json_data = {};
+        // ajax获取接口详情
+        $.get('{{ url_for("projects.interfaces", interface_id=interface.id) }}', JSON.stringify(json_data), function(data) {
+            let interface_name = data['data']['name'];
+            let interface_url = data['data']['url'];
+            let method_type = data['data']['method_type'];
+            let info = data['data']['info'];
+
+            $('#interface_name').text(interface_name);
+            $('#interface_url').text(interface_url);
+            $('#method_type').text(method_type);
+            $('#info').text(info);
+
+            // 显示请求参数列表
+            show_table(data, 'request_body', 'request_row', $('#request_param_table'));
+
+            // 显示响应参数列表
+            show_table(data, 'response_body', 'response_row', $('#response_param_table'));
+        });
+
+        // 添加请求参数点击事件
+        $('#add_request_param').click(function(e) {
+            add_row(e, $('#request_param_table'), 'request_row');
+        });
+
+        // 添加响应参数点击事件
+        $('#add_response_param').click(function(e) {
+            add_row(e, $('#response_param_table'), 'response_row');
+        });
+
+        //
+        $('#save_request_button').click(function(e) {
+            let request_data = get_data('request_row');
+            let response_data = get_data('response_row');
+
+            let result = {'request_data': request_data, 'response_data': response_data};
+
+            // 发送ajax请求，保存数据
+            $.post('{{ url_for("projects.edit_interface", interface_id=interface.id) }}', JSON.stringify(result), function(data) {
+                alert(data['code']);
+
+            });
+        });
+    });
+</script>
+{% endblock %}

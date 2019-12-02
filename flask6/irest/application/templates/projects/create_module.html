@@ -1,0 +1,26 @@
+{% extends '/layout.html' %}
+
+{% block title %}皮蛋 - 新建模块{% endblock %}
+
+{% block body %}
+<h1>新建模块</h1>
+
+<form action="{{ url_for('projects.create_module', project_id=project.id) }}" method="POST">
+
+    {{ form.hidden_tag() }}   
+    <div>
+        <span>{{ form.module_name.label }}</span>
+        &nbsp;{{ form.module_name }}
+        {{ macros.show_errors(form.module_name.errors) }}
+    </div>
+
+    <div>
+        <span>{{ form.module_info.label }}</span>
+        &nbsp;{{ form.module_info }}
+        {{ macros.show_errors(form.module_info.errors) }}
+    </div>
+    
+    <div>{{ form.submit }}</div>
+</form>
+
+{% endblock %}

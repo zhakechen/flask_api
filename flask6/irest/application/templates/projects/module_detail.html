@@ -1,0 +1,24 @@
+{% extends '/layout.html' %}
+
+{% block title %}皮蛋 - {{ module.name }}{% endblock %}
+
+{% block body %}
+{{ super() }}
+<h1>{{ module.name }}</h1>
+<a href="{{ url_for('projects.create_interface', module_id=module.id) }}">创建接口</a>
+
+<div style="height: 20px;"></div>
+<div>
+    {% for interface in interfaces %}
+            <div>
+            <a href="{{ url_for('projects.edit_interface', interface_id=interface.id) }}">{{ interface.name }}</a>
+        </div>
+    {% endfor %}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+    });
+</script>
+{% endblock %}

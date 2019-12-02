@@ -1,0 +1,39 @@
+{% extends '/layout.html' %}
+
+
+{% block title %}皮蛋 - 欢迎注册{% endblock %}
+
+{% block body %}
+{#    {{ super() }}   {# 自己有内容，并且继承父模板的内容 #}
+<h1>欢迎注册皮蛋网</h1>
+
+<form action="{{ url_for('users.register') }}" method="POST">
+
+    {{ form.hidden_tag() }}   {# from 为users下的视图函数的参数 #}
+    <div>
+        <span>{{ form.username.label }}</span>       {# 表单上的username的标签 #}
+        &nbsp;{{ form.username }}              {# 表单上的username #}
+        {{ macros.show_errors(form.username.errors) }}   {#  #}
+    </div>
+
+    <div>
+        <span>{{ form.password.label }}</span>
+        &nbsp;{{ form.password }}
+        {{ macros.show_errors(form.password.errors) }}
+    </div>
+
+    <div>
+        <span>{{ form.mobile.label }}</span>
+        &nbsp;{{ form.mobile }}
+        {{ macros.show_errors(form.mobile.errors) }}
+    </div>
+
+
+    {# 在注册页面插入登录属性 #}
+    <a href="{{ url_for('users.login') }}">登录</a>
+
+
+    <div>{{ form.submit }}</div>
+</form>
+
+{% endblock %}

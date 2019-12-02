@@ -1,0 +1,37 @@
+{% import 'macros.html' as macros %}  {# 引入macros页面， #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}皮蛋 - 高效在线接口设计工具{% endblock %}</title>
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    
+<div>
+    {% for message in get_flashed_messages() %}
+        <span>{{ message }}</span><br/>
+    {% endfor %}
+</div>
+
+{% block body %}
+<div>
+    <ul>
+    {% if current_user.is_authenticated %}
+    {# current_user由Flask-login定义.且在视图函数和模板中自动可用.这个变量的值是当前登录的用户 #}
+    {# is_authenticated()方法返回False.所以这个方法可用来判断当前用户是否已经登录 #}
+    <li><a href="{{ url_for('users.logout') }}">登出</a>
+        {# 用户登录时写入登录用户的名字 #}
+        {{ current_user.username }}
+    </li>
+    {% else  %}
+        <a href="{{ url_for('users.login') }}">登录</a>
+        <a href="{{ url_for('users.register') }}">注册</a>
+    {% endif %}
+    </ul>
+</div>
+
+{% endblock %}
+</body>
+</html>
+

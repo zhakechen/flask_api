@@ -1,0 +1,31 @@
+{% extends '/layout.html' %}
+
+{% block title %}皮蛋 - 欢迎登录{% endblock %}
+
+{% block body %}
+<h1>欢迎登录皮蛋网</h1>
+
+<form action="{{ url_for('users.login') }}" method="POST">
+
+    {{ form.hidden_tag() }}   
+    <div>
+        <span>{{ form.username.label }}</span>
+        &nbsp;{{ form.username }}
+        {{ macros.show_errors(form.username.errors) }}
+    </div>
+
+    <div>
+        <span>{{ form.password.label }}</span>
+        &nbsp;{{ form.password }}
+        {{ macros.show_errors(form.password.errors) }}
+    </div>
+
+    <div>
+        <span>{{ form.remember_me.label }}</span>
+        &nbsp;{{ form.remember_me }}
+    </div>
+    
+    <div>{{ form.submit }}</div>
+</form>
+{% endblock %}
+

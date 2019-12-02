@@ -1,0 +1,38 @@
+{% extends '/layout.html' %}
+
+{% block title %}皮蛋 - 新建接口{% endblock %}
+
+{% block body %}
+<h1>新建接口</h1>
+
+<form action="{{ url_for('projects.create_interface', module_id=module.id) }}" method="POST">
+
+    {{ form.hidden_tag() }}   
+    <div>
+        <span>{{ form.name.label }}</span>
+        &nbsp;{{ form.name }}
+        {{ macros.show_errors(form.name.errors) }}
+    </div>
+
+    <div>
+        <span>{{ form.url.label }}</span>
+        &nbsp;{{ form.url }}
+        {{ macros.show_errors(form.url.errors) }}
+    </div>
+
+    <div>
+        <span>{{ form.method_type.label }}</span>
+        &nbsp;{{ form.method_type }}
+        {{ macros.show_errors(form.method_type.errors) }}
+    </div>
+
+    <div>
+        <span>{{ form.info.label }}</span>
+        &nbsp;{{ form.info }}
+        {{ macros.show_errors(form.info.errors) }}
+    </div>
+    
+    <div>{{ form.submit }}</div>
+</form>
+
+{% endblock %}

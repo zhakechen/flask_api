@@ -1,0 +1,25 @@
+{% extends '/layout.html' %}
+
+{% block title %}皮蛋 - {{ project.name }}{% endblock %}
+
+{% block body %}
+{{ super() }}
+<h1>{{ project.name }}</h1>
+<a href="{{ url_for('projects.create_module', project_id=project.id) }}">创建模块</a>
+
+<div>
+    {% for module in modules %}
+        <div style="float: left; width: 100px;height: 50px; color: black; margin: 10px; border: 2px solid black;">
+            <a href="{{ url_for('projects.modules', module_id=module.id) }}">{{ module.name }}</a>
+            &nbsp;&nbsp;
+        </div>
+        
+    {% endfor %}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+    });
+</script>
+{% endblock %}

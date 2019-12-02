@@ -1,0 +1,26 @@
+{% extends '/layout.html' %}
+
+{% block title %}皮蛋 - 新建项目{% endblock %}
+
+{% block body %}
+<h1>新建项目</h1>
+
+<form action="{{ url_for('projects.create_project') }}" method="POST">
+
+    {{ form.hidden_tag() }}   
+    <div>
+        <span>{{ form.project_name.label }}</span>
+        &nbsp;{{ form.project_name }}
+        {{ macros.show_errors(form.project_name.errors) }}    {# 提示信息 #}
+    </div>
+
+    <div>
+        <span>{{ form.project_info.label }}</span>
+        &nbsp;{{ form.project_info }}
+        {{ macros.show_errors(form.project_info.errors) }}
+    </div>
+    
+    <div>{{ form.submit }}</div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+{% macro show_errors(errors) %}
+    {% for error in errors %}
+        <span style="color: blue;">{{ error }}</span>
+    {% endfor %}
+{% endmacro %}
+
+
+{# 用户输入错误信息的时候，页面上会显示蓝色的错误提示 #}

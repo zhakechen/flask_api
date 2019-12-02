@@ -1,0 +1,55 @@
+{# 此页面为用户注册完后的登录状态界面 #}
+{% extends '/layout.html' %}       {# 继承layout 页面 #}
+
+{% block title %}皮蛋 - 我的项目{% endblock %}
+
+{% block body %}
+{{ super() }}
+<h1>我的项目</h1>
+    <input type="text" placeholder="请在此搜索" id="search"> <br>
+    <input type="button" value="搜索" onclick="search()">
+
+    <div id="result">
+
+    </div>
+    {# projects下views里的create_project,调用create_project跳转到'projects/create_project.html'(新建项目), #}
+    <a href="{{ url_for('projects.create_project') }}">创建项目</a>
+<div>
+    {% for project in projects %}
+        <div style="float: left; width: 200px;height: 100px; color: black; margin: 10px; border: 2px solid black;">
+            <a href="{{ url_for('projects.detail', project_id=project.id) }}">{{ project }}</a>
+            &nbsp;&nbsp;
+            <a href="javascript:delete_project('{{ project.id }}')">X</a>
+        </div>
+        
+    {% endfor %}
+</div>
+
+<script type="text/javascript">
+    function delete_project(project_id) {
+        alert(project_id);
+        let json_data = {'project_id': project_id};
+        {# 将JavaScript值转换为JavaScript对象表示法（JSON）字符串 #}
+        $.post('{{ url_for("projects.delete_project") }}', JSON.stringify(json_data), function(data) {
+            window.location = '{{ url_for("projects.index") }}';
+        })
+    }
+    {#function search(){#}
+    {#    let json_data = {'key':$('#search').val()}#}
+    {#    $.post(#}
+    {#        '{{ url_for("projects.index") }}',#}
+    {#        JSON.stringify(json_data),#}
+    {#        function(data) {#}
+    {#            alert('11')#}
+    {#            console.log('1'+data['code'])#}
+    {#            window.location = '{{ url_for("projects.index") }}';#}
+    {#        }#}
+    {#    )#}
+
+
+    function search(){
+        key = $('#search').val()
+        window.location = '{{ url_for("projects.index") }}?key=' + key;
+    }
+</script>
+{% endblock %}
